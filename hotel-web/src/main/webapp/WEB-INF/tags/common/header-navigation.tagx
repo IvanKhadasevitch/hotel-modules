@@ -1,0 +1,152 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+          xmlns:c="http://java.sun.com/jsp/jstl/core"
+          xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+          version="2.0" >
+
+    <fmt:setLocale value="${sessionScope.locale}"/>
+    <fmt:setBundle basename="messages" var="i18n"/>
+
+    <!--<nav class="navbar navbar-default  navbar-fixed-top">-->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <!--A navigation bar is a navigation header that is placed at the top of the page:-->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!--set brand name in navigation header-->
+                <a class="navbar-brand" href="#"><fmt:message key="header.brand" bundle="${i18n}"/></a>
+
+            </div>
+            <!--<c:if test="${empty user or not empty user and user.role eq 'USER'}">-->
+            <c:if test="${empty sessionScope.user or not empty sessionScope.user and empty sessionScope.admin}">
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <c:if test="${empty sessionScope.admin}">
+                            <!--this section only for user-->
+                            <!--set Hotel/Отели in navigation header-->
+                            <c:choose>
+                                <c:when test="${sessionScope.pageName eq 'Hotels'}">
+                                    <!--page Hotels - nothing refer-->
+                                    <li class="active"><a href="#"><fmt:message key="hotels.title" bundle="${i18n}"/></a></li>
+                                </c:when>
+                                <c:otherwise>
+                                    <!--page not Hotels - refer to Hotels page-->
+                                    <li><a href="${pageContext.request.contextPath}/frontController?command=hotels"><fmt:message key="hotels.title" bundle="${i18n}"/></a></li>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
+
+                        <!--set Orders/Заказы in navigation header-->
+                        <c:if test="${not empty sessionScope.user}">
+                            <!--set Orders/Заказы in navigation header for user-->
+                            <c:choose>
+                                <c:when test="${sessionScope.pageName eq 'Orders'}">
+                                    <!--page Orders - nothing refer-->
+                                    <li class="active"><a href="#"><fmt:message key="orders.title" bundle="${i18n}"/></a></li>
+                                </c:when>
+                                <c:otherwise>
+                                    <!--page not Orders - refer to Orders page-->
+                                    <li><a href="${pageContext.request.contextPath}/frontController?command=orders"><fmt:message key="orders.title" bundle="${i18n}"/></a></li>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
+                        <c:if test="${not empty sessionScope.admin}">
+                            <!--set Orders/Заказы in navigation header for admin-->
+                            <c:choose>
+                                <c:when test="${sessionScope.pageName eq 'OrdersLookAdmin'}">
+                                    <!--page Orders - nothing refer-->
+                                    <li class="active"><a href="#"><fmt:message key="ordersLook.title" bundle="${i18n}"/></a></li>
+                                </c:when>
+                                <c:otherwise>
+                                    <!--page not Orders - refer to Orders page-->
+                                    <li><a href="${pageContext.request.contextPath}/frontController?command=OrdersLookAdmin"><fmt:message key="ordersLook.title" bundle="${i18n}"/></a></li>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
+
+
+                        <!--set Bills/Счета in navigation header-->
+                        <c:if test="${not empty sessionScope.user}">
+                            <!--set Bills/Счета in navigation header for user-->
+                            <c:choose>
+                                <c:when test="${sessionScope.pageName eq 'Bills'}">
+                                    <!--page Bills - nothing refer-->
+                                    <li class="active"><a href="#"><fmt:message key="bills.title" bundle="${i18n}"/></a></li>
+                                </c:when>
+                                <c:otherwise>
+                                    <!--page not Bills - refer to Bills page-->
+                                    <li><a href="${pageContext.request.contextPath}/frontController?command=bills"><fmt:message key="bills.title" bundle="${i18n}"/></a></li>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
+                        <c:if test="${not empty sessionScope.admin}">
+                            <!--set Bills/Счета in navigation header for admin-->
+                            <c:choose>
+                                <c:when test="${sessionScope.pageName eq 'BillsAdmin'}">
+                                    <!--page Bills - nothing refer-->
+                                    <li class="active"><a href="#"><fmt:message key="billsAdmin.title" bundle="${i18n}"/></a></li>
+                                </c:when>
+                                <c:otherwise>
+                                    <!--page not Bills - refer to Bills page-->
+                                    <li><a href="${pageContext.request.contextPath}/frontController?command=BillsAdmin"><fmt:message key="billsAdmin.title" bundle="${i18n}"/></a></li>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
+
+
+                        <!--set Ru and En in navigation header-->
+                        <c:url var="path" value="/frontController?command=${sessionScope.pageName}"></c:url>
+                        <li><a href="${path}&amp;locale=ru"><fmt:message key="header.locale.ru" bundle="${i18n}"/></a></li>
+                        <li><a href="${path}&amp;locale=en"><fmt:message key="header.locale.en" bundle="${i18n}"/></a></li>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <!--chek user login-->
+                        <c:if test="${not empty user}">
+                            <!--user is logIn, Hi...User -->
+                            <li><span class="text"><fmt:message key="loginUser.hi" bundle="${i18n}"/>, ${user.name} ${user.surName}!</span></li>
+                            <!--User can Logout -->
+                            <li>
+                                <a href="${pageContext.request.contextPath}/frontController?command=logoutUser">
+                                    <span class="glyphicon glyphicon-log-out"><fmt:message key="logoutUser.refer" bundle="${i18n}"/></span>
+                                </a>
+                            </li>
+                        </c:if>
+                        <c:if test="${empty user  and not (pageName eq 'LoginUser') and empty admin}">
+                            <!--User can LogIn, admin is LogOff-->
+                            <li>
+                                <a href="${pageContext.request.contextPath}/frontController?command=loginUser"><span class="glyphicon glyphicon-log-in"><fmt:message key="loginUser.refer" bundle="${i18n}"/></span>
+                                </a>
+                            </li>
+                        </c:if>
+
+                        <!--chek admin login-->
+                        <c:if test="${not empty admin}">
+                            <!--Admin is logIn, Hi...Admin -->
+                            <li><span class="text"><fmt:message key="loginAdmin.hi" bundle="${i18n}"/>, ${admin.name}!</span></li>
+                            <!--Admin can Logout -->
+                            <li>
+                                <a href="${pageContext.request.contextPath}/frontController?command=logoutAdmin">
+                                    <span class="glyphicon glyphicon-cutlery"><fmt:message key="logoutAdmin.refer" bundle="${i18n}"/></span>
+                                </a>
+                            </li>
+                        </c:if>
+                        <c:if test="${empty admin  and not (pageName eq 'Login Admin') and empty user}">
+                            <!--Admin can LogIn, User is LogOff-->
+                            <li>
+                                <a href="${pageContext.request.contextPath}/frontController?command=loginAdmin">
+                                    <span class="glyphicon glyphicon-log-in"><fmt:message key="loginAdmin.refer" bundle="${i18n}"/></span>
+                                </a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </div>
+            </c:if>
+        </div>
+    </nav>
+
+</jsp:root>
