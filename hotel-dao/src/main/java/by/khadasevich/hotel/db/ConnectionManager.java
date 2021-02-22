@@ -1,5 +1,7 @@
 package by.khadasevich.hotel.db;
 
+import by.khadasevich.hotel.db.pool.PooledConnection;
+
 import java.sql.Connection;
 
 /**
@@ -10,7 +12,8 @@ public final class ConnectionManager {
     /**
      * TreadLocal variable to store Connection.
      */
-    private static ThreadLocal<Connection> tl = new ThreadLocal<>();
+//    private static ThreadLocal<Connection> tl = new ThreadLocal<>();
+    public static ThreadLocal<Connection> tl = new ThreadLocal<>();
 
     private ConnectionManager() {
         // utility class, no realisation needed

@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import by.khadasevich.hotel.db.pool.ConnectionPool;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 /**
@@ -19,7 +20,8 @@ public final class DataSource {
     /**
      * Pooled datasource, use c3p0.
      */
-    private ComboPooledDataSource pooledDatasource;
+//    private ComboPooledDataSource pooledDatasource;
+    private ConnectionPool pooledDatasource;
 
     /**
      * Data base url.
@@ -54,19 +56,23 @@ public final class DataSource {
     }
 
     private DataSource()
-            throws IOException, SQLException, PropertyVetoException {
-        pooledDatasource = new ComboPooledDataSource();
-        pooledDatasource.setDriverClass(DRIVER); //loads the jdbc driver
-        pooledDatasource.setJdbcUrl(URL);
-        pooledDatasource.setUser(USER);
-        pooledDatasource.setPassword(PASSWORD);
+    {
+//            throws IOException, SQLException, PropertyVetoException {
+//        pooledDatasource = new ComboPooledDataSource();
+//        pooledDatasource.setDriverClass(DRIVER); //loads the jdbc driver
+//        pooledDatasource.setJdbcUrl(URL);
+//        pooledDatasource.setUser(USER);
+//        pooledDatasource.setPassword(PASSWORD);
+//
+//        // the settings below are optional -- c3p0 can work with defaults
+//        pooledDatasource.setMinPoolSize(10);
+//        pooledDatasource.setAcquireIncrement(5);
+//        pooledDatasource.setMaxPoolSize(20);
+//        pooledDatasource.setMaxStatements(180);
 
-        // the settings below are optional -- c3p0 can work with defaults
-        pooledDatasource.setMinPoolSize(10);
-        pooledDatasource.setAcquireIncrement(5);
-        pooledDatasource.setMaxPoolSize(20);
-        pooledDatasource.setMaxStatements(180);
-
+        pooledDatasource = ConnectionPool.getInstance();
+        pooledDatasource.init(DRIVER, URL, USER, PASSWORD,
+                3, 25, 60*60*5);
     }
 
 //    public static synchronized DataSource getInstance()
