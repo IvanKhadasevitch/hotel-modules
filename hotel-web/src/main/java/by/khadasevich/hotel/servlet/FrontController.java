@@ -1,6 +1,7 @@
 package by.khadasevich.hotel.servlet;
 
 import by.khadasevich.hotel.command.enums.CommandType;
+import by.khadasevich.hotel.db.ConnectionManager;
 import by.khadasevich.hotel.handlers.RequestHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet(urlPatterns = "/frontController")
 public class FrontController extends HttpServlet {
@@ -34,6 +36,11 @@ public class FrontController extends HttpServlet {
         try {
             CommandType commandType = RequestHandler.getCommand(req);
             commandType.getController().execute(req, resp);
+
+            if (ConnectionManager.tl.get() != null) {
+                ConnectionManager.tl.get().close();
+                ConnectionManager.tl.set(null);
+            }
 
         } catch (Exception e) {
             logger.error(e.getMessage());
